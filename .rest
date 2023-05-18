@@ -1,0 +1,79 @@
+@baseUrl = http://localhost:8080
+
+# Get all users
+GET {{baseUrl}}/users
+
+###
+# Get users by username
+GET {{baseUrl}}/users/jane_smith
+
+### POST /users
+
+# Creates a new user
+POST {{baseUrl}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "John_Dang",
+  "email": "johndang@example.com",
+  "password": "pinkiegold"
+}
+
+### Get all posts
+
+GET {{baseUrl}}/posts
+
+###
+# Get posts by tag name
+GET {{baseUrl}}/posts/book
+
+### POST /posts
+# Creates a new post
+POST {{baseUrl}}/posts HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "JohnDang",
+  "content": "johndang@example.com",
+  "author": "pinkiegold",
+  "tags": ["tag1", "tag2"]
+}
+
+# Get all users
+###
+GET https://cse-web-service.onrender.com/users/
+
+# Get users by username
+###
+GET https://cse-web-service.onrender.com/users/jane_smith/
+
+# Create a new user
+### POST /users
+POST https://cse-web-service.onrender.com/users/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "JohnnyDang",
+  "email": "johndang@example.com",
+  "password": "pinkiegold"
+}
+
+# Get all posts
+###
+GET https://cse-web-service.onrender.com/posts/
+
+# Get posts by tag name
+###
+GET https://cse-web-service.onrender.com/posts/book/
+
+# Create a new post
+### POST /contacts
+POST https://cse-web-service.onrender.com/posts/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "JohnDang",
+  "content": "johndang@example.com",
+  "author": "pinkiegold",
+  "tags": ["tag1", "tag2"]
+}
