@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Social Media Users and Posts API",
+    "version": "1.0.0",
+    "description": "An API to manage Users and Posts"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": ["http", "https"],
+  "paths": {
+    "/users/": {
+      "get": {
+        "tags": ["social media users"],
+        "summary": "Gets all users from database",
+        "description": "List of users",
+        "parameters": [],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "The document was not found (e.g. incorrect route)"
+          }
+        }
+      },
+      "post": {
+        "tags": ["social media users"],
+        "summary": "Creates a new user",
+        "description": "Create new users",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "example@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],        
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "get": {
+        "tags": ["social media users"],
+        "summary": "Finds user by username",
+        "description": "Get users by username",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "username string is required and functions as an id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "The user was not found (e.g. incorrect username)"
+          }
+        }
+      }
+    },
+    "/posts/": {
+      "get": {
+        "tags": ["social media posts"],
+        "summary": "Gets all post in database",
+        "description": "List of posts",
+        "parameters": [],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "The document was not found (e.g. incorrect route)"
+          }
+        }
+      },
+      "post": {
+        "tags": ["social media posts"],
+        "summary": "Creates a new post",
+        "description": "Creates new posts",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "Lorem ipsum"
+                },
+                "author": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": ["tag1", "tag2"]
+                }
+              }
+            }
+          }
+        ],
+        
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/posts/{tag}": {
+      "get": {
+        "tags": ["social media posts"],
+        "summary": "Finds social media posts by tag",
+        "description": "Each post has an array of tags, this will basically return posts with same tags almost like an id",
+        "operationId": "findPostByTags",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "path",
+            "description": "Post tag string is required and functions as an id",
+            "required": true,
+            "type": "string",
+            "items": {
+              "type": "string",
+              "default": "available"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid tag name value"
+          }
+        }
+      }
+    }
+  }
+}
