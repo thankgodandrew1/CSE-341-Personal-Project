@@ -9,8 +9,8 @@ const docs = {
       version: '1.0.0',
       description: 'An API to manage Users and Posts'
     },
-    host: 'localhost:8080',
-    schemes: ['http']
+    host: 'cse-web-service.onrender.com',
+    schemes: ['https']
   };
 
 swaggerAutogen(outputFile, endpointsFiles, docs).then(() => {
