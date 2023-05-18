@@ -5,9 +5,9 @@
     "version": "1.0.0",
     "description": "An API to manage Users and Posts"
   },
-  "host": "localhost:8080",
+  "host": "cse-web-service.onrender.com",
   "basePath": "/",
-  "schemes": ["http", "https"],
+  "schemes": ["https", "http"],
   "paths": {
     "/users/": {
       "get": {
