@@ -1,3 +1,5 @@
+# Performs HTTP Requests for 
+# the Users API route
 @baseUrl = http://localhost:8080
 
 # Get all users
@@ -14,13 +16,36 @@ POST {{baseUrl}}/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "John_Dang",
+  "username": "john_dang",
   "email": "johndang@example.com",
   "password": "pinkiegold"
 }
 
-### Get all posts
+### PUT /users
+# Updates users info
+PUT {{baseUrl}}/users/646e2308a23e2d598dcdce2f HTTP/1.1
+Content-Type: application/json
 
+{
+  "username": "john_dang23",
+  "email": "johndang@example.com",
+  "password": "pinkiegold"
+}
+
+###
+#  Deletes a user
+DELETE  {{baseUrl}}/users/646e1ebe18e21c35bf5be148 HTTP/1.1
+
+
+
+
+
+
+
+# Performs HTTP Requests for 
+# the Posts API route
+
+### Get all posts
 GET {{baseUrl}}/posts
 
 ###
@@ -38,6 +63,31 @@ Content-Type: application/json
   "author": "pinkiegold",
   "tags": ["tag1", "tag2"]
 }
+
+### PUT /posts
+# Updates users posts
+PUT {{baseUrl}}/posts/646e25aaa23e2d598dcdce30 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "JohnnyDang",
+  "content": "johndang@example.com",
+  "author": "pinkiegold",
+  "tags": ["tag1", "tag2"]
+}
+
+### DELETE /posts
+# Delete users posts
+DELETE {{baseUrl}}/posts/646e25aaa23e2d598dcdce30 HTTP/1.1
+
+
+
+
+
+
+# Performs HTTP Requests for 
+# the API using the Deployment link
+
 
 # Get all users
 ###
@@ -58,6 +108,22 @@ Content-Type: application/json
   "password": "pinkiegold"
 }
 
+PUT https://cse-web-service.onrender.com/users/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "john_dang23",
+  "email": "johndang@example.com",
+  "password": "pinkiegold"
+}
+
+###
+#  Deletes a user
+DELETE  https://cse-web-service.onrender.com/users/ HTTP/1.1
+
+
+
+
 # Get all posts
 ###
 GET https://cse-web-service.onrender.com/posts/
@@ -77,3 +143,19 @@ Content-Type: application/json
   "author": "pinkiegold",
   "tags": ["tag1", "tag2"]
 }
+
+### PUT /posts
+# Updates users posts
+PUT https://cse-web-service.onrender.com/posts/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "JohnnyDang",
+  "content": "johndang@example.com",
+  "author": "pinkiegold",
+  "tags": ["tag1", "tag2"]
+}
+
+### DELETE /posts
+# Delete users posts
+DELETE https://cse-web-service.onrender.com/posts/ HTTP/1.1

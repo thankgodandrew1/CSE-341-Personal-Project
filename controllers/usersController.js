@@ -1,3 +1,5 @@
+const ObjectId = require('mongodb').ObjectId;
+
 module.exports = (usersCollection) => {
   const getUsers = async (req, res) => {
     try {
@@ -33,6 +35,28 @@ module.exports = (usersCollection) => {
       console.error(error);
       res.status(500).send('Server error');
     }
-  };  
-  return { getUsers, getUserByUsername, createUser }
+  };
+  const updateUser = async (req, res) => {
+    try {
+      await usersCollection.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+      res.sendStatus(204);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  };
+
+  const deleteUser = async (req, res) => {
+    try {
+      const result = await usersCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+      if (result.deleteCount === 0) {
+        return res.status(404).send('Post not found');
+      }
+      res.sendStatus(200);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  };
+  return { getUsers, getUserByUsername, createUser, updateUser, deleteUser }
 };

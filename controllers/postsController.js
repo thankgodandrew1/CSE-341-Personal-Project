@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 module.exports = (postsCollection) => {
   const getPosts = async (req, res) => {
     try {
@@ -33,5 +35,28 @@ module.exports = (postsCollection) => {
       res.status(500).send('Server error');
     }
   };
-  return { getPosts, getPostsByTag, createPost };
+
+  const updatePosts = async (req, res) => {
+    try {
+      await postsCollection.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+      res.sendStatus(204);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  };
+
+  const deletePosts = async (req, res) => {
+    try {
+      const result = await postsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+      if (result.deleteCount === 0) {
+        return res.status(404).send('Post not found');
+      }
+      res.sendStatus(200);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  };
+  return { getPosts, getPostsByTag, createPost, updatePosts, deletePosts };
 };

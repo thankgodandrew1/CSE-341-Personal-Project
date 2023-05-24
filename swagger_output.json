@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Social Media Users and Posts API",
+    "title": "Social Media Users and Posts API's Endpoints",
     "version": "1.0.0",
-    "description": "An API to manage Users and Posts"
+    "description": "An API to manage social media Users and Posts"
   },
   "host": "cse-web-service.onrender.com",
   "basePath": "/",
@@ -11,8 +11,8 @@
   "paths": {
     "/users/": {
       "get": {
-        "tags": ["social media users"],
-        "summary": "Gets all users from database",
+        "tags": ["Social media users API endpoints"],
+        "summary": "Retrieves a list of all users",
         "description": "List of users",
         "parameters": [],
         "produces": ["application/json"],
@@ -26,7 +26,7 @@
         }
       },
       "post": {
-        "tags": ["social media users"],
+        "tags": ["Social media users API endpoints"],
         "summary": "Creates a new user",
         "description": "Create new users",
         "parameters": [
@@ -51,7 +51,7 @@
               }
             }
           }
-        ],        
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -64,8 +64,8 @@
     },
     "/users/{username}": {
       "get": {
-        "tags": ["social media users"],
-        "summary": "Finds user by username",
+        "tags": ["Social media users API endpoints"],
+        "summary": " Retrieves information about a specific user based on their username.",
         "description": "Get users by username",
         "produces": ["application/json"],
         "parameters": [
@@ -87,10 +87,75 @@
         }
       }
     },
+    "/users/{id}": {
+      "put": {
+        "tags": ["Social media users API endpoints"],
+        "summary": "Updates information for a specific user based on their ID",
+        "description": "Updates users information",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "example@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content success (indicates that a request has succeeded)"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Social media users API endpoints"],
+        "summary": "Deletes a specific user based on their ID",
+        "description": "Deletes users",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/posts/": {
       "get": {
-        "tags": ["social media posts"],
-        "summary": "Gets all post in database",
+        "tags": ["Social media posts API endpoints"],
+        "summary": "Retrieves a list of all posts",
         "description": "List of posts",
         "parameters": [],
         "produces": ["application/json"],
@@ -104,7 +169,7 @@
         }
       },
       "post": {
-        "tags": ["social media posts"],
+        "tags": ["Social media posts API endpoints"],
         "summary": "Creates a new post",
         "description": "Creates new posts",
         "parameters": [
@@ -137,7 +202,6 @@
             }
           }
         ],
-        
         "responses": {
           "201": {
             "description": "Created"
@@ -150,8 +214,8 @@
     },
     "/posts/{tag}": {
       "get": {
-        "tags": ["social media posts"],
-        "summary": "Finds social media posts by tag",
+        "tags": ["Social media posts API endpoints"],
+        "summary": "Retrieves posts based on a specific tag",
         "description": "Each post has an array of tags, this will basically return posts with same tags almost like an id",
         "operationId": "findPostByTags",
         "produces": ["application/json"],
@@ -177,6 +241,78 @@
           },
           "400": {
             "description": "Invalid tag name value"
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "put": {
+        "tags": ["Social media posts API endpoints"],
+        "summary": "Updates information for a specific post based on its ID",
+        "description": "Updates posts information",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "example": "any"
+                },
+                "content": {
+                  "type": "string",
+                  "example": "Lorem ipsum"
+                },
+                "author": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": ["tag1", "tag2"]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content success (indicates that a request has succeeded)"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Social media posts API endpoints"],
+        "summary": "Deletes a specific post based on its ID",
+        "description": "Deletes posts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
