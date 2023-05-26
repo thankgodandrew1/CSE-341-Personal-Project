@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { validationResult } = require('express-validator');
 
 module.exports = (postsCollection) => {
   const getPosts = async (req, res) => {
@@ -12,11 +13,20 @@ module.exports = (postsCollection) => {
   };
   const getPostsByTag = async (req, res) => {
     try {
-      const post = await postsCollection.find({ tags: req.params.tags }).toArray();
-      if (!post) {
-        return res.status(404).send('No posts found with the specified tag');
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
       }
-      res.json(post);
+  
+      const { tags } = req.params;
+      const tagList = tags.split(',');
+  
+      const posts = await postsCollection.find({ tags: { $in: tagList } }).toArray();
+      if (posts.length === 0) {
+        return res.status(404).json({ message: 'No posts found with the specified tags' });
+      }
+  
+      res.json(posts);
     } catch (error) {
       console.error(error);
       res.status(500).send('Server error');
@@ -24,6 +34,12 @@ module.exports = (postsCollection) => {
   };
   const createPost = async (req, res) => {
     try {
+      // Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      
       const post = {
         ...req.body,
         created_at: new Date()
@@ -38,6 +54,11 @@ module.exports = (postsCollection) => {
 
   const updatePosts = async (req, res) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
       await postsCollection.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
       res.sendStatus(204);
     } catch (error) {
@@ -48,6 +69,11 @@ module.exports = (postsCollection) => {
 
   const deletePosts = async (req, res) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      
       const result = await postsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
       if (result.deleteCount === 0) {
         return res.status(404).send('Post not found');

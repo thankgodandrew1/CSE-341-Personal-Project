@@ -16,9 +16,9 @@ POST {{baseUrl}}/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "john_dang",
+  "username": "john_doe",
   "email": "johndang@example.com",
-  "password": "pinkiegold"
+  "password": "UzzX3RjLtT3t8zv._78s"
 }
 
 ### PUT /users
@@ -27,14 +27,14 @@ PUT {{baseUrl}}/users/646e2308a23e2d598dcdce2f HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "john_dang23",
+  "username": "_doe",
   "email": "johndang@example.com",
-  "password": "pinkiegold"
+  "password": "UzzX3RjLtT3t8zv._78s"
 }
 
 ###
 #  Deletes a user
-DELETE  {{baseUrl}}/users/646e1ebe18e21c35bf5be148 HTTP/1.1
+DELETE  {{baseUrl}}/users/646e66c2e149abab41f110be HTTP/1.1
 
 
 
@@ -59,8 +59,8 @@ Content-Type: application/json
 
 {
   "title": "JohnDang",
-  "content": "johndang@example.com",
-  "author": "pinkiegold",
+  "content": "tammy",
+  "author": "",
   "tags": ["tag1", "tag2"]
 }
 
@@ -78,7 +78,7 @@ Content-Type: application/json
 
 ### DELETE /posts
 # Delete users posts
-DELETE {{baseUrl}}/posts/646e25aaa23e2d598dcdce30 HTTP/1.1
+DELETE {{baseUrl}}/posts/646e720f6abf6cbc6c3c61e3 HTTP/1.1
 
 
 
