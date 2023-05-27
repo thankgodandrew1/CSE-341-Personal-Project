@@ -65,11 +65,6 @@ module.exports = (usersCollection) => {
 
   const deleteUser = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-      
       const result = await usersCollection.deleteOne({ _id: new ObjectId(req.params.id) });
       if (result.deleteCount === 0) {
         return res.status(404).send('Post not found');

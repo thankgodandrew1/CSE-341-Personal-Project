@@ -69,10 +69,6 @@ module.exports = (postsCollection) => {
 
   const deletePosts = async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       
       const result = await postsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
       if (result.deleteCount === 0) {
