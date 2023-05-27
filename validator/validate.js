@@ -66,18 +66,15 @@ exports.validateRoutes = (entity) => {
         body('username')
           .notEmpty()
           .withMessage('Username is required')
+          .isLength({ min: 3, max: 20 })
+          .withMessage('Username must be between 3 and 20 characters')
           .custom(async (value, { req }) => {
             const { usersCollection } = req.app.locals;
-            const user = await usersCollection.findOne({ username: value });
-            if (user && user.id !== req.params.id) {
-              throw new Error('Username already exists');
-            } else if (!user) {
-              throw new Error('USer not found');
+            const existingUser = await usersCollection.findOne({ username: value });
+            if (existingUser && existingUser.id !== req.params.id) {
+              throw new Error('USername is already taken');
             }
           }),
-        body('username')
-          .isLength({ min: 3, max: 20 })
-          .withMessage('Username must be between 3 and 20 characters'),
         body('email')
           .notEmpty()
           .withMessage('Email is required')
