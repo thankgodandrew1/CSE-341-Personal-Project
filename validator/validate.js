@@ -72,7 +72,7 @@ exports.validateRoutes = (entity) => {
             const { usersCollection } = req.app.locals;
             const existingUser = await usersCollection.findOne({ username: value });
             if (existingUser && existingUser.id !== req.params.id) {
-              throw new Error('USername is already taken');
+              throw new Error('Username is already taken');
             }
           }),
         body('email')
@@ -91,3 +91,5 @@ exports.validateRoutes = (entity) => {
       throw new Error(`Invalid entity: ${entity}`);
   }
 };
+
+

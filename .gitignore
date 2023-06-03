@@ -1,3 +1,4 @@
 node_modules
 .env
 social.json
+client_secret.json

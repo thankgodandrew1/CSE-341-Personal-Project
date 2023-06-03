@@ -1,7 +1,10 @@
-//server.js entry point
+// server.js entry point
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
 
 const homeRoute = require('./routes/home');
 const usersRoute = require('./routes/usersRoute');
@@ -18,6 +21,58 @@ dotenv.config();
 
 // Enabled CORS for all requests
 app.use(cors());
+
+app.use(express.static('public'));
+
+// This code block enables session management
+app.use(
+  session({
+    secret: process.env.CLIENT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Serialize user object
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+// Deserialize user object
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: 'https://cse-web-service.onrender.com/auth/google/callback',
+    },
+    (accessToken, refreshToken, profile, done) => {
+      console.log('Passport callback function fired');
+      console.log(profile);
+      return done(null, profile);
+    }
+  )
+);
+
+// Redirect the user to the Google OAuth authentication page
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+
+// Google OAuth callback route
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // Successful authentication, redirect to the Swagger API documentation
+    res.redirect('/api-docs');
+  }
+);
 
 db.connect()
   .then((database) => {
@@ -47,8 +102,8 @@ db.connect()
       res.status(error.status || 500);
       res.json({
         error: {
-          message: error.message
-        }
+          message: error.message,
+        },
       });
     });
 
@@ -60,5 +115,5 @@ db.connect()
     console.error(error);
   });
 
-  // used the swagger UI to serve API documentation
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// Use the swagger UI to serve API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
