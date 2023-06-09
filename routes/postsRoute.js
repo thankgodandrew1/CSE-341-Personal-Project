@@ -2,20 +2,21 @@ const express = require('express');
 const router = express.Router();
 const postsController = require('../controllers/postsController');
 const { validateRoutes } = require('../validator/validate');
+const isAuthenticated = require('../middlewares/isAuthenticated')
 
 module.exports = (postsCollection) => {
   const { getPosts, getPostsByTag, createPost, updatePosts, deletePosts } =
     postsController(postsCollection);
 
-  router.get('/', getPosts);
+  router.get('/', isAuthenticated, getPosts);
 
-  router.get('/:tags', getPostsByTag);
+  router.get('/:tags', isAuthenticated, getPostsByTag);
 
-  router.post('/', validateRoutes('createPost'), createPost);
+  router.post('/', isAuthenticated, validateRoutes('createPost'), createPost);
 
-  router.put('/:id', validateRoutes('updatePosts'), updatePosts);
+  router.put('/:id', isAuthenticated, validateRoutes('updatePosts'), updatePosts);
 
-  router.delete('/:id', deletePosts);
+  router.delete('/:id', isAuthenticated, deletePosts);
 
   // Added Error handler to router
   router.use((err, req, res, next) => {
