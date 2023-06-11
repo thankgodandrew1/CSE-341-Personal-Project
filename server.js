@@ -5,14 +5,18 @@ const cors = require('cors');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
+const { graphqlHTTP } = require('express-graphql');
 
 const homeRoute = require('./routes/home');
 const usersRoute = require('./routes/usersRoute');
 const postsRoute = require('./routes/postsRoute');
+const logoutRoute = require('./routes/logoutRoute');
 
 const db = require('./database/db');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output.json');
+const schema = require('./schemas/schema');
+const isAuthenticated = require('./middlewares/isAuthenticated');
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -22,14 +26,14 @@ dotenv.config();
 // Enabled CORS for all requests
 app.use(cors());
 
-app.use(express.static('public'));
+app.use('/login', express.static('public'));
 
 // This code block enables session management
 app.use(
   session({
     secret: process.env.CLIENT_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false
   })
 );
 
@@ -51,20 +55,20 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: 'https://cse-web-service.onrender.com/auth/google/callback',
+      callbackURL: 'https://cse-web-service.onrender.com/auth/google/callback'
     },
     (accessToken, refreshToken, profile, done) => {
       console.log('Passport callback function fired');
-      console.log(profile);
+      // console.log(profile);
       return done(null, profile);
     }
   )
 );
 
-// Redirect the user to the Google OAuth authentication page
+app.use('/logout', isAuthenticated, logoutRoute);
+
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
-// Google OAuth callback route
 app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
@@ -89,8 +93,25 @@ db.connect()
     // pass the posts collection to the posts route
     app.use('/posts', postsRoute(postsCollection));
 
-    // use the home route for all other routes
     app.use('/', homeRoute);
+
+    app.use(
+      '/graphql',
+      (req, res, next) => {
+        if (!req.isAuthenticated()) {
+          return res.redirect('/login');
+        }
+        next();
+      },
+      graphqlHTTP({
+        schema: schema,
+        context: {
+          postsCollection: postsCollection,
+          usersCollection: usersCollection
+        },
+        graphiql: true
+      })
+    );
 
     app.use((req, res, next) => {
       const error = new Error('Not found');
@@ -102,8 +123,8 @@ db.connect()
       res.status(error.status || 500);
       res.json({
         error: {
-          message: error.message,
-        },
+          message: error.message
+        }
       });
     });
 
@@ -116,4 +137,16 @@ db.connect()
   });
 
 // Use the swagger UI to serve API documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(
+  '/api-docs',
+  (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      // If thw user is not authenticated, it redirects to the login page
+      return res.redirect('/login');
+    }
+    // if they are authenticated, the app proceeds to serve the Swagger UI
+    next();
+  },
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile)
+);
